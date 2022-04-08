@@ -32,7 +32,7 @@ const fetchCityGeolocations = async (query: string) => {
     const apiKey = process.env.REACT_APP_API_KEY
 
     const response = await fetch(
-        `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`
+        `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`
     );
 
     if (!response.ok) {

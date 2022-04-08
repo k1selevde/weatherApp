@@ -10,7 +10,14 @@ import { themeLight } from './theme';
 const queryClient = new QueryClient()
 
 
-
+const app = (
+    <ThemeProvider theme={themeLight}>
+        <Sidebar />
+        <div className="containerMain" >
+            <Routes />
+        </div>
+    </ThemeProvider>
+)
 
 function App() {
     return (
@@ -18,12 +25,7 @@ function App() {
             <RecoilRoot>
                 <QueryClientProvider client={queryClient} contextSharing >
                     <BrowserRouter>
-                        <ThemeProvider theme={themeLight}>
-                            <Sidebar />
-                            <div className="containerMain" >
-                                <Routes />
-                            </div>
-                        </ThemeProvider>
+                        {app}
                     </BrowserRouter>
                 </QueryClientProvider>
             </RecoilRoot>
