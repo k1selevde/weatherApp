@@ -47,7 +47,7 @@ const Favorites = () => {
             <Caption>Favorites list</Caption>
             <div>
                 <List>
-                    {testData.map(card => <FavoriteCard data={card} />)}
+                    {testData.map((card, index) => <FavoriteCard key={index} data={card} />)}
                 </List>
             </div>
         </div>

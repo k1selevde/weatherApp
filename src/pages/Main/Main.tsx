@@ -1,13 +1,14 @@
 import React, {useEffect} from 'react';
 import useDocumentTitle from "../../shared/hooks/useDocumentTitle";
-import styles from './Main.module.sass'
 import MainSearchField, {OptionAutocompleteInputType} from "./components/MainSearchField/MainSearchField";
 import WeekCarousel from "./components/WeekCarousel/WeekCarousel";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilState} from "recoil";
 import {mainDailyForecastState, mainDayForecastState, mainSearchValueState} from './main.state'
 import {useQuery} from "react-query";
 import DayData from "./components/DayData/DayData";
 import styled from "styled-components";
+import noDataLightPath from '../../shared/assets/static/noDataLight.svg'
+
 
 const fetchForecastCityData = async ({lat, lon}: OptionAutocompleteInputType) => {
     const apiKey = process.env.REACT_APP_API_KEY
@@ -33,12 +34,12 @@ const Main = () => {
     const [__, setForecastData] = useRecoilState(mainDailyForecastState)
     const [day, ___] = useRecoilState(mainDayForecastState)
 
-    const { data, error, isLoading, isSuccess, isRefetching, isError } = useQuery(
+    const { data, isSuccess } = useQuery(
         ["posts", searchMainData],
         () => fetchForecastCityData(searchMainData),
         {
             refetchOnWindowFocus: false,
-            // enabled: false
+            enabled: !!searchMainData.id
         }
     )
 
@@ -50,6 +51,7 @@ const Main = () => {
 
     //styles
     const Container = styled.div`
+      margin-top: 40px;
       display: flex;
       gap: 40px;
     `
@@ -60,20 +62,40 @@ const Main = () => {
       gap: 50px;
     `
 
+    const EmptyWrapper = styled.div`
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px
+    `
+
     const renderWeekColumn = () => {
         return (
             <WeekContainer>
-                <MainSearchField />
                 <WeekCarousel />
             </WeekContainer>
         )
     }
 
-    return (
+    const emptyBlock = (
+        <EmptyWrapper>
+            <p>Введите более двух символов в поисковую строку...</p>
+            <img src={noDataLightPath} alt="noData" width={'200px'} height={'200px'}/>
+        </EmptyWrapper>
+    )
+
+    const content = (
         <Container>
             {renderWeekColumn()}
             <DayData data={day}/>
         </Container>
+    )
+
+    return (
+        <>
+            <MainSearchField/>
+            {!searchMainData.id ? emptyBlock : content}
+        </>
     );
 };
 

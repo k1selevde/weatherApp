@@ -3,7 +3,6 @@ import { useQuery } from 'react-query';
 import useDebounce from '../../../../shared/hooks/useDebounce';
 import AutocompleteInput from "../../../../shared/ui-kit/AutocompleteInput/AutocompleteInput";
 import { GeoCityRestType } from '../../../../types';
-import {json} from "stream/consumers";
 import { useRecoilState } from 'recoil';
 import {mainSearchValueState} from "../../main.state";
 
@@ -52,6 +51,7 @@ const MainSearchField = () => {
         () => fetchCityGeolocations(debouncedQuery),
         {
             refetchOnWindowFocus: false,
+            enabled: debouncedQuery.length > 2
         }
     )
 

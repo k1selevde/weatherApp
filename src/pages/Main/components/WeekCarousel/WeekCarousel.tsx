@@ -9,52 +9,58 @@ import { DayCityForecastType } from '../../../../types';
 import styled from 'styled-components';
 
 
-const PrevArrow = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-`
+// const PrevArrow = styled.div`
+//   position: absolute;
+//   top: 50%;
+//   display: block;
+//   padding: 0;
+//   transform: translate(0, -50%);
+//   cursor: pointer;
+//   z-index: 1;
+//   right: 3%
+// `
+//
+// const NextArrow = styled.div`
+//   position: absolute;
+//   top: 50%;
+//   display: block;
+//   padding: 0;
+//   transform: translate(0, -50%);
+//   cursor: pointer;
+//   z-index: 1;
+//   left: 3%
+// `
+//
+// const ArrowPrev = (props: any) => {
+//     const { onClick } = props;
+//
+//     return (
+//         <PrevArrow onClick={onClick}>
+//             <IconButton iconType={'arrowUp'}/>
+//         </PrevArrow>
+//     )
+// }
+//
+// const ArrowNext = (props: any) => {
+//     const { onClick } = props;
+//     return (
+//         <NextArrow onClick={onClick}>
+//             <IconButton iconType={'arrowDown'}/>
+//         </NextArrow>
+//     )
+// }
 
-const NextArrow = styled.div`
-  bottom: 0;
-  left: 0;
-`
-
-const ContainerList = styled.div`
-  width: 400px;
-`
 
 
-const ArrowPrev = (props: any) => {
-    const { onClick } = props;
-
-    return (
-        <PrevArrow onClick={onClick}>
-            <IconButton iconType={'arrowUp'}/>
-        </PrevArrow>
-    )
-}
-
-const ArrowNext = (props: any) => {
-    const { onClick } = props;
-    return (
-        <NextArrow onClick={onClick}>
-            <IconButton iconType={'arrowDown'}/>
-        </NextArrow>
-    )
-}
-
-
-
-const settings = {
-    arrows: true,
-    dots:  false,
-    slidesToShow: 4,
-    infinite: false,
-    vertical: true,
-    prevArrow: <ArrowPrev />,
-    nextArrow: <ArrowNext />,
-};
+// const settings = {
+//     arrows: true,
+//     dots:  false,
+//     slidesToShow: 3,
+//     infinite: false,
+//     // vertical: true,
+//     prevArrow: <ArrowPrev />,
+//     nextArrow: <ArrowNext />,
+// };
 
 const WeekCarousel: React.FC = () => {
     const [data, _] = useRecoilState(mainDailyForecastState)
@@ -67,21 +73,18 @@ const WeekCarousel: React.FC = () => {
         setDay(day)
     }, [])
 
-    const renderSlider = () => (
-        <Slider {...settings}>
-            {daily?.map((day: DayCityForecastType) => (
+    const list = (
+        // <Slider {...settings}>
+        <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
+            {daily?.slice(0,5).map((day: DayCityForecastType) => (
                 <TempByDay key={day.dt} data={day} onClick={handleClickSliderItem} isActive={currentDay.dt === day.dt}/>
             ))}
-        </Slider>
+        </div>
     )
 
     return (
         <>
-            {ArrayAndNotEmpty(daily) &&
-            <ContainerList>
-                {renderSlider()}
-            </ContainerList>
-            }
+            {ArrayAndNotEmpty(daily) && list}
         </>
     );
 };

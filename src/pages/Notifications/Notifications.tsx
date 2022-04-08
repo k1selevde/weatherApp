@@ -68,7 +68,7 @@ const Notifications = () => {
         <div>
             <Caption>Notifications</Caption>
             <List>
-                {testData.map(alert => <Alert data={alert} />)}
+                {testData.map((alert, index) => <Alert key={index} data={alert} />)}
             </List>
         </div>
     );

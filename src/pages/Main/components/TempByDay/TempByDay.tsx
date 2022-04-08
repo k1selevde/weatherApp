@@ -22,6 +22,7 @@ const TempByDay: React.FC<Props> = ({data, onClick, isActive}) => {
       transition: background-color ease .2s;
       padding: 12px;
       cursor: pointer;
+      width: 300px;
       &:hover {
         background-color: ${props => props.theme.active}
       }
@@ -52,7 +53,7 @@ const TempByDay: React.FC<Props> = ({data, onClick, isActive}) => {
     )
 
     const renderDate = () => (
-        <div>
+        <div style={{whiteSpace: 'nowrap'}}>
             {new Date(data.dt * 1000).toDateString()}
         </div>
     )

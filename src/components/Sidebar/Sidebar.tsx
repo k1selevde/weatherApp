@@ -67,7 +67,7 @@ const Sidebar: React.FC = () => {
     `
 
     const renderMenuLink = ({title, link, iconType}: SidebarMenuLinkType): React.ReactNode => (
-        <li title={title}>
+        <li title={title} key={link}>
             <IconLink iconType={iconType} to={link} title={title}/>
         </li>
     )
