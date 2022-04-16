@@ -11,13 +11,12 @@ const Cover: React.FC<Props> = ({children, className = ''}) => {
         className: className
     })`
       padding: 6px;
-      background-color: ${props => props.theme.default};
+      background-color: var(--selected-default-color);
       transition: background-color ease-in .3s;
-      width: fit-content;
       border-radius: 10px;
       
       &:hover {
-        background-color: ${props => props.theme.active};
+        background-color: var(--selected-active-color);
       }
     `
 

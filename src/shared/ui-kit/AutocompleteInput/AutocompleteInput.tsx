@@ -1,18 +1,17 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {ArrayAndNotEmpty} from "../../helpers/common";
 import useOnClickOutside from '../../hooks/useOnClickOutside';
-import cn from 'classnames'
-import styles from './AutocompleteInput.module.sass'
 import Icon from '../Icon/Icon';
 import {OptionAutocompleteInputType} from "../../../pages/Main/components/MainSearchField/MainSearchField";
+import styled from "styled-components";
 
-type Option = OptionAutocompleteInputType
+type OptionType = OptionAutocompleteInputType
 
 interface IAutocompleteInputProps {
     onChange: Function | null
     onOptionClick:  Function | null
     disabled?: boolean
-    options: Array<Option>
+    options: Array<OptionType>
     maxLength?: number
     placeholder?: string
     className?: string
@@ -22,7 +21,7 @@ interface IAutocompleteInputProps {
     isLoading: boolean
 }
 
-const AutocompleteInput: React.FC<IAutocompleteInputProps> = (props) => {
+const AutocompleteInput = (props: IAutocompleteInputProps) => {
 
     const {
         onChange,
@@ -31,7 +30,6 @@ const AutocompleteInput: React.FC<IAutocompleteInputProps> = (props) => {
         isError,
         isLoading,
         options,
-        className,
         maxLength,
         placeholder,
         errorMessage = '',
@@ -60,7 +58,7 @@ const AutocompleteInput: React.FC<IAutocompleteInputProps> = (props) => {
         onChange && onChange(val)
     }
 
-    const handleOptionClick = (option: Option) => () => {
+    const handleOptionClick = (option: OptionType) => () => {
         setDropdownVisible(false)
 
         setValue(option.title)
@@ -69,9 +67,14 @@ const AutocompleteInput: React.FC<IAutocompleteInputProps> = (props) => {
 
     useOnClickOutside(dropdownVisibleRef, handleClickOutside);
 
-    const renderOption = (option: Option) => {
+    const renderOption = (option: OptionType) => {
         return (
-            <li key={option.id} className={styles.option} onClick={handleOptionClick(option)}>{option.title}</li>
+            <Option
+                key={option.id}
+                onClick={handleOptionClick(option)}
+            >
+                {option.title}
+            </Option>
         )
     }
 
@@ -80,9 +83,9 @@ const AutocompleteInput: React.FC<IAutocompleteInputProps> = (props) => {
             <>
                 {
 
-                    <ul className={styles.optionsList}>
+                    <OptionsList>
                         {options.map(renderOption)}
-                    </ul>
+                    </OptionsList>
                 }
             </>
         )
@@ -96,26 +99,18 @@ const AutocompleteInput: React.FC<IAutocompleteInputProps> = (props) => {
         <div>Loading</div>
     )
 
-    const renderDropdown = () => {
-        if (!dropdownVisible) return
-
+    const renderSwitch = () => {
         switch (true) {
             case (isError): {
-                return <div ref={dropdownVisibleRef} className={styles.dropdownContainer}>
-                    {renderError()}
-                </div>
+                return renderError()
             }
 
             case (isLoading): {
-                return <div ref={dropdownVisibleRef} className={styles.dropdownContainer}>
-                    {renderLoading()}
-                </div>
+                return renderLoading()
             }
 
             case (ArrayAndNotEmpty(options)): {
-                return <div ref={dropdownVisibleRef} className={styles.dropdownContainer}>
-                    {renderOptions()}
-                </div>
+                return renderOptions()
             }
 
             default:
@@ -123,36 +118,97 @@ const AutocompleteInput: React.FC<IAutocompleteInputProps> = (props) => {
         }
     }
 
-    const renderInput = () => {
-        const inputCN = cn({
-            [styles.input]: true,
-            [`${className}`]: !!className
-        })
+    const renderDropdown = () => {
+        if (!dropdownVisible) return
 
+        return (
+            <DropdownContainer ref={dropdownVisibleRef}>
+                {renderSwitch()}
+            </DropdownContainer>
+        )
+
+    }
+
+    const renderInput = () => {
         const props = {
+            autoFocus: true,
             disabled,
-            className: inputCN,
             maxLength,
             onChange: handleChange,
             value,
-            placeholder
+            placeholder,
+            type: "text"
         }
 
-        return <div className={styles.inputWrapper}>
-            <input type="text" {...props} />
-            <div className={styles.inputIcon}>
+        const styles = {
+            background: 'transparent',
+            border: 'none',
+            color: 'inherit',
+            padding: '5px 5px 5px 15px',
+            width: '100%'
+        }
+
+        return <InputWrapper>
+            <input {...props} style={styles}/>
+            <div>
                 <Icon iconType={'search'} />
             </div>
-        </div>
+        </InputWrapper>
 
     }
 
     return (
-        <div className={styles.wrapper}>
+        <Wrapper>
             {renderInput()}
             {renderDropdown()}
-        </div>
+        </Wrapper>
     );
 };
+
+
+const Wrapper = styled.div`
+      position: relative;
+      width: 300px;
+    `
+
+const InputWrapper = styled.div`
+      border-radius: 20px;
+      background-color: var(--selected-default-color);
+      color: var(--selected-inner-color);
+      display: flex;
+      padding: 5px;
+    `
+
+const DropdownContainer = styled.div`
+      width: inherit;
+      top: 110%;
+      position: absolute;
+      z-index: 10;
+      border-radius: 5px;
+      background-color: var(--selected-default-color);
+      color: var(--selected-inner-color);
+      overflow: hidden;
+      padding: 10px 5px;
+      box-shadow: 0 0 6px rgba(0,0, 0, 30%);
+    `
+
+const OptionsList = styled.ul`
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    `
+
+const Option = styled.li`
+      border-radius: 5px;
+      cursor: pointer;
+      padding: 5px 5px 5px 8px;
+      transition: all ease .3s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      &:hover {
+        background: #b3d4fc;
+      }
+    `
 
 export default AutocompleteInput;

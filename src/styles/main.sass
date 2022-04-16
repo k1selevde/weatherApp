@@ -1,8 +1,27 @@
 @import "reset.sass"
-@import "variables.sass"
 
 @import "slick-carousel/slick/slick.css"
 @import "slick-carousel/slick/slick-theme.css"
+
+\:root
+  /* active theme values */
+  --selected-active-color: var(--light-active-color)
+  --selected-default-color: var(--light-default-color)
+  --selected-faded-color: var(--light-faded-color)
+  --selected-inner-color: var(--light-inner-color)
+
+  /*'light' theme */
+  --light-active-color: #FFBB6A
+  --light-default-color: #FFF8B8
+  --light-faded-color: #FFFCE4
+  --light-inner-color: #000
+
+  /*'dark' theme */
+  --dark-active-color: #36393B
+  --dark-default-color: #595959
+  --dark-faded-color: #989898
+  --dark-inner-color: #FFF
+
 
 .containerApp
   display: flex
@@ -10,23 +29,25 @@
 .containerMain
   padding: 2em
   width: 100%
+  overflow: hidden
 
-////custom for week carousel
-.slick-list
-  padding-bottom: 100px!important
-  width: 1000px
-  //height: 420px!important
-//
+
+
+// TODO-k1selevde: не забыть после принятия решения по карусели
+//.slick-list
+//  padding-bottom: 100px!important
+//  width: 1000px
+
 //.slick-track
 //  display: flex
 //  flex-direction: column
 //  gap: 10px
 
 
-.slick-prev
-  left: -3% !important
-  z-index: 1
-
-.slick-next
-  right: -3% !important
-  z-index: 1
+//.slick-prev
+//  left: -3% !important
+//  z-index: 1
+//
+//.slick-next
+//  right: -3% !important
+//  z-index: 1

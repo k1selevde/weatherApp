@@ -2,13 +2,12 @@ import React, {useEffect} from 'react';
 import useDocumentTitle from "../../shared/hooks/useDocumentTitle";
 import MainSearchField, {OptionAutocompleteInputType} from "./components/MainSearchField/MainSearchField";
 import WeekCarousel from "./components/WeekCarousel/WeekCarousel";
-import {useRecoilState} from "recoil";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 import {mainDailyForecastState, mainDayForecastState, mainSearchValueState} from './main.state'
 import {useQuery} from "react-query";
 import DayData from "./components/DayData/DayData";
 import styled from "styled-components";
 import noDataLightPath from '../../shared/assets/static/noDataLight.svg'
-
 
 const fetchForecastCityData = async ({lat, lon}: OptionAutocompleteInputType) => {
     const apiKey = process.env.REACT_APP_API_KEY
@@ -27,12 +26,13 @@ const fetchForecastCityData = async ({lat, lon}: OptionAutocompleteInputType) =>
     return response.json();
 }
 
+
 const Main = () => {
     useDocumentTitle('Main')
 
-    const [searchMainData, _] = useRecoilState(mainSearchValueState);
-    const [__, setForecastData] = useRecoilState(mainDailyForecastState)
-    const [day, ___] = useRecoilState(mainDayForecastState)
+    const searchMainData = useRecoilValue(mainSearchValueState);
+    const setForecastData = useSetRecoilState(mainDailyForecastState)
+    const day = useRecoilValue(mainDayForecastState)
 
     const { data, isSuccess } = useQuery(
         ["posts", searchMainData],
@@ -49,26 +49,6 @@ const Main = () => {
         }
     }, [data])
 
-    //styles
-    const Container = styled.div`
-      margin-top: 40px;
-      display: flex;
-      gap: 40px;
-    `
-
-    const WeekContainer = styled.div`
-      display: flex;
-      flex-direction: column;
-      gap: 50px;
-    `
-
-    const EmptyWrapper = styled.div`
-      margin-top: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px
-    `
-
     const renderWeekColumn = () => {
         return (
             <WeekContainer>
@@ -80,7 +60,7 @@ const Main = () => {
     const emptyBlock = (
         <EmptyWrapper>
             <p>Введите более двух символов в поисковую строку...</p>
-            <img src={noDataLightPath} alt="noData" width={'200px'} height={'200px'}/>
+            <img src={noDataLightPath} alt="noData" width="200" height="200"/>
         </EmptyWrapper>
     )
 
@@ -98,5 +78,25 @@ const Main = () => {
         </>
     );
 };
+
+
+const Container = styled.div`
+      margin-top: 40px;
+      display: flex;
+      gap: 40px;
+    `
+
+const WeekContainer = styled.div`
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+    `
+
+const EmptyWrapper = styled.div`
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px
+    `
 
 export default Main;

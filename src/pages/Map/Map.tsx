@@ -2,7 +2,7 @@ import React from 'react';
 import useDocumentTitle from "../../shared/hooks/useDocumentTitle";
 import MapSearchField from "./components/MapSearchField/MapSearchField";
 
-const Map: React.FC = () => {
+const Map = () => {
 
     useDocumentTitle('Map')
 

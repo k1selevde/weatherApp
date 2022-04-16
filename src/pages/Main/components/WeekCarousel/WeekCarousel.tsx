@@ -2,13 +2,15 @@ import React, {useCallback} from 'react';
 import Slider from "react-slick";
 import IconButton from '../../../../shared/ui-kit/IconButton/IconButton';
 import TempByDay from "../TempByDay/TempByDay";
-import {useRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import {mainDailyForecastState, mainDayForecastState} from "../../main.state";
 import { ArrayAndNotEmpty } from '../../../../shared/helpers/common';
 import { DayCityForecastType } from '../../../../types';
 import styled from 'styled-components';
 
-
+/*
+* TODO-k1selevde: Возможно в будущем придет в голову как играться со слайдером и решение проблем нескольких проблем, например: холостого прокручивания в начало
+*/
 // const PrevArrow = styled.div`
 //   position: absolute;
 //   top: 50%;
@@ -62,11 +64,10 @@ import styled from 'styled-components';
 //     nextArrow: <ArrowNext />,
 // };
 
-const WeekCarousel: React.FC = () => {
-    const [data, _] = useRecoilState(mainDailyForecastState)
+const WeekCarousel = () => {
+    const data = useRecoilValue(mainDailyForecastState)
     const [currentDay, setDay] = useRecoilState(mainDayForecastState)
 
-    //@ts-ignore
     const {daily} = data
 
     const handleClickSliderItem = useCallback((day: DayCityForecastType) => {

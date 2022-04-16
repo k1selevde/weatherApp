@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './styles/main.sass';
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <ErrorBoundary>
     <App />
-  </React.StrictMode>,
+  </ErrorBoundary>,
   document.getElementById('root')
 );
 

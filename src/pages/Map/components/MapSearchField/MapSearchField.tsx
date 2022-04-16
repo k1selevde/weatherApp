@@ -2,7 +2,6 @@ import React from 'react';
 import AutocompleteInput from "../../../../shared/ui-kit/AutocompleteInput/AutocompleteInput";
 
 const MapSearchField = () => {
-
     const props = {
         onChange: () => {},
         onOptionClick: () => {},

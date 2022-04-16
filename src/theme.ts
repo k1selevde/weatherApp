@@ -1,20 +1,54 @@
-//пока нет логики использую только эту
-import {DefaultTheme} from "styled-components";
-
-const themeLight: DefaultTheme = {
-    active: '#FFBB6A',
-    default: '#FFF8B8',
-    faded: '#FFFCE4',
-};
+import {atom} from "recoil";
 
 
-const themeDark: DefaultTheme = {
-    active: '#36393B',
-    default: '#595959',
-    faded: '#989898',
+export type ThemeStateType = 'light' | 'dark'
+
+const themeState = atom<ThemeStateType>({
+    key: 'themeState',
+    // должно соответствовать значениям "--selected" переменных по умолчанию в файле "main.sass"
+    default: 'light',
+    effects: [
+    ({onSet}) => {
+        onSet((newValue) => {
+            setSelectedCssVariables(newValue)
+        });
+    },
+],
+});
+
+
+const setSelectedCssVariables = (themeName: 'light' | 'dark') => {
+    const selectedCssProps = Array.from(document.styleSheets)
+        .reduce(
+            (acc: any[], sheet: CSSStyleSheet) =>
+                (acc = [
+                    ...acc,
+                    ...Array.from(sheet.cssRules)
+                        .reduce(
+                            // FIXME-k1selevde тип CSSRule не содержит style почему-то :(
+                            (def: any[], rule: any) => (
+                                (def = rule.selectorText === ":root"
+                                    ? [
+                                        ...def,
+                                        ...Array.from(rule.style).filter((name: any) =>
+                                            name.startsWith("--selected")
+                                        )
+                                    ]
+                                    : def
+                                )
+                            ),
+                            []
+                        )
+                ]),
+            []
+        );
+
+    selectedCssProps.forEach(prop => {
+        document.documentElement.style.setProperty(prop, `var(--${themeName}${prop.substring(10)})`);
+    });
 }
 
 export {
-    themeLight,
-    themeDark
+    themeState,
+    setSelectedCssVariables
 }

@@ -4,29 +4,25 @@ import Routes from "./components/Routes";
 import Sidebar from "./components/Sidebar/Sidebar";
 import { RecoilRoot } from 'recoil'
 import { QueryClientProvider, QueryClient } from 'react-query';
-import {ThemeProvider} from 'styled-components';
-import { themeLight } from './theme';
+
 
 const queryClient = new QueryClient()
 
-
-const app = (
-    <ThemeProvider theme={themeLight}>
-        <Sidebar />
-        <div className="containerMain" >
-            <Routes />
-        </div>
-    </ThemeProvider>
+const Body = () => (
+        <BrowserRouter>
+            <Sidebar />
+            <div className="containerMain" >
+                <Routes />
+            </div>
+        </BrowserRouter>
 )
 
 function App() {
     return (
-        <div className="containerApp" >
+        <div className="containerApp">
             <RecoilRoot>
                 <QueryClientProvider client={queryClient} contextSharing >
-                    <BrowserRouter>
-                        {app}
-                    </BrowserRouter>
+                        <Body />
                 </QueryClientProvider>
             </RecoilRoot>
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { RestIconsIdTypes } from '../../../types';
+import { RestIconsIdType } from '../../../types';
+
 import picture01 from '../../assets/static/01.svg'
 import picture02 from '../../assets/static/02.svg'
 import picture03 from '../../assets/static/03.svg'
@@ -22,20 +23,20 @@ const pictures: {[key: string]: string} = {
 }
 
 type Props = {
-    code: RestIconsIdTypes
+    code: RestIconsIdType
 }
 
-const ForecastIcon: React.FC<Props> = ({code}) => {
+const ForecastIcon = ({code}: Props) => {
 
     const getIconPath = (type: string): string => {
         return pictures[type] || pictures["default"]
     }
 
     /**
-     * @param {RestIconsIdTypes} code - код иконки погоды
+     * @param {RestIconsIdType} code - код иконки погоды
      * @return {string} возвращает код иконки погоды без привязки к времени суток или пустую строку
      * */
-    const convertIconCode = (code: RestIconsIdTypes): string => {
+    const convertIconCode = (code: RestIconsIdType): string => {
         return code.slice(0, -1) ?? ""
     }
 

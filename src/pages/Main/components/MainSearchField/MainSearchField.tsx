@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import useDebounce from '../../../../shared/hooks/useDebounce';
 import AutocompleteInput from "../../../../shared/ui-kit/AutocompleteInput/AutocompleteInput";
 import { GeoCityRestType } from '../../../../types';
-import { useRecoilState } from 'recoil';
+import {useSetRecoilState} from 'recoil';
 import {mainSearchValueState} from "../../main.state";
 
 export type OptionAutocompleteInputType = {
@@ -13,10 +13,10 @@ export type OptionAutocompleteInputType = {
     lon: number | string
 }
 
-const mapCityOptions = (cities: Array<GeoCityRestType> | any): Array<OptionAutocompleteInputType> => {
+const mapCityOptions = (cities: Array<GeoCityRestType>): Array<OptionAutocompleteInputType> => {
 
     return cities?.map((city: GeoCityRestType) => {
-        const title = [city.name, city.state, city.country].filter(item => typeof item === 'string').join(', ')
+        const title = [city.name, city.state, city.country].join(', ')
 
         return ({
             title,
@@ -55,7 +55,7 @@ const MainSearchField = () => {
         }
     )
 
-    const [_, setSearchValue] = useRecoilState(mainSearchValueState);
+    const setSearchValue = useSetRecoilState(mainSearchValueState);
 
     useEffect( () => {
         if (isSuccess) {
@@ -71,7 +71,7 @@ const MainSearchField = () => {
         }
     }
 
-    const handleOptionClick = (option: any) => {
+    const handleOptionClick = (option: OptionAutocompleteInputType) => {
         setSearchValue(option)
     }
 
@@ -81,8 +81,7 @@ const MainSearchField = () => {
         options,
         isLoading: isLoading || isRefetching,
         isError,
-        // @ts-ignore
-        errorMessage: error?.toString()
+        errorMessage: (error ?? "") as string
     }
 
     return (

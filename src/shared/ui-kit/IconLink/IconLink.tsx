@@ -9,27 +9,15 @@ type Props = {
     title?: string
 }
 
-const IconLink: React.FC<Props> = ({iconType, to, title}) => {
+const IconLink = ({iconType, to, title}: Props) => {
 
     const isActive = useMatch(to)
-
-    const StyledNavLink = styled(NavLink)<NavLinkProps>`
-      border-radius: 10px;
-      padding: 10px;
-      transition: background-color ease-in .4s;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: ${({theme}) => isActive ? theme.active : theme.default};
-      &:hover {
-        background: ${props => props.theme.active}
-      }
-    `
 
     return (
         <div>
             <StyledNavLink
                 end
+                isActive={!!isActive}
                 title={title || 'link'}
                 to={to}
             >
@@ -38,5 +26,18 @@ const IconLink: React.FC<Props> = ({iconType, to, title}) => {
         </div>
         );
 };
+
+const StyledNavLink = styled(NavLink)<NavLinkProps & {isActive: boolean}>`
+      border-radius: 10px;
+      padding: 10px;
+      transition: background-color ease-in .4s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: ${({isActive}) => isActive ? `var(--selected-active-color)` : `var(--selected-default-color)`};
+      &:hover {
+        background: var(--selected-active-color)
+      }
+    `
 
 export default IconLink;

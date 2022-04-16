@@ -11,34 +11,7 @@ type Props  = {
     isActive: boolean
 }
 
-
-
-const TempByDay: React.FC<Props> = ({data, onClick, isActive}) => {
-
-
-    const CardWrapper = styled.div`
-      border-radius: 10px;
-      background-color: ${({theme}) => isActive ? theme.active : theme.default};
-      transition: background-color ease .2s;
-      padding: 12px;
-      cursor: pointer;
-      width: 300px;
-      &:hover {
-        background-color: ${props => props.theme.active}
-      }
-    `
-
-    const CardInner = styled.div`
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-    `
-
-    const TempsWrapper = styled.div`
-      display: flex;
-      gap: 10px;
-    `
-
+const TempByDay = ({data, onClick, isActive}: Props) => {
     const renderDayNightTemp = () => (
         <TempsWrapper>
             <div>
@@ -59,7 +32,7 @@ const TempByDay: React.FC<Props> = ({data, onClick, isActive}) => {
     )
 
     return (
-        <CardWrapper onClick={() => onClick(data)}>
+        <CardWrapper isActive={isActive} onClick={() => onClick(data)}>
             <CardInner>
                 {renderDate()}
                 {renderDayNightTemp()}
@@ -68,5 +41,29 @@ const TempByDay: React.FC<Props> = ({data, onClick, isActive}) => {
         </CardWrapper>
     );
 };
+
+
+const CardWrapper = styled.div<{isActive: boolean}>`
+      border-radius: 10px;
+      background: ${({isActive}) => isActive ? `var(--selected-active-color)` : `var(--selected-default-color)`};
+      transition: background-color ease .2s;
+      padding: 12px;
+      cursor: pointer;
+      width: 300px;
+      &:hover {
+        background-color: var(--selected-active-color)
+      }
+    `
+
+const CardInner = styled.div`
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    `
+
+const TempsWrapper = styled.div`
+      display: flex;
+      gap: 10px;
+    `
 
 export default memo(TempByDay);

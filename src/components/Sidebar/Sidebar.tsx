@@ -6,11 +6,10 @@ import styled from "styled-components";
 type SidebarMenuLinkType = {
     title: string,
     iconType: string,
-    ddd?: number,
     link: string
 }
 
-const sidebarMenuLinks = [
+const sidebarMenuLinks: Array<SidebarMenuLinkType> = [
     {
         title: 'Main',
         iconType: "cloud",
@@ -38,34 +37,7 @@ const sidebarMenuLinks = [
     }
 ]
 
-const Sidebar: React.FC = () => {
-
-    const List = styled.ul`
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    `
-
-    const Container  = styled.section`
-      height: 100vh;
-      background: #FFFCE4;
-      width: 90px;
-    `
-    const Wrapper = styled.div`
-    flex-direction: column;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    `
-
-    const Nav = styled.nav`
-      display: flex;
-      flex-direction: column;
-      gap: 100px;
-      align-items: center;
-    `
-
+const Sidebar = () => {
     const renderMenuLink = ({title, link, iconType}: SidebarMenuLinkType): React.ReactNode => (
         <li title={title} key={link}>
             <IconLink iconType={iconType} to={link} title={title}/>
@@ -83,11 +55,38 @@ const Sidebar: React.FC = () => {
             <Wrapper>
                 <Nav>
                     {renderMenuLinks(sidebarMenuLinks)}
-                    <TranslationPicker/>
+                    <TranslationPicker />
                 </Nav>
             </Wrapper>
         </Container>
     );
 };
+
+
+const Wrapper = styled.div`
+    flex-direction: column;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    `
+
+const Nav = styled.nav`
+      display: flex;
+      flex-direction: column;
+      gap: 100px;
+      align-items: center;
+    `
+
+const List = styled.ul`
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    `
+
+const Container  = styled.section`
+      background: var(--selected-faded-color);
+      width: 90px;
+    `
 
 export default Sidebar;

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Icon from '../../../../shared/ui-kit/Icon/Icon';
 import {DayCityForecastType} from "../../../../types";
 import Cover from '../../../../shared/ui-kit/Cover/Cover';
@@ -9,30 +9,9 @@ type Props = {
     data: DayCityForecastType
 }
 
-//timed
 const sunPhasesTimeMaskOptions = {hour: 'numeric', minute: 'numeric'}
 
-const DayData: React.FC<Props> = ({data}) => {
-    const Container = styled.section`
-      display: grid;
-      grid-gap: 20px;
-    `
-
-    const RotatedIconWindWrapper = styled.div`
-      height: fit-content;
-      width: fit-content;
-      transform: rotate(${(`${data.wind_deg}deg`)});
-    `
-
-    const WindWrapper = styled.div`
-      padding: .6em;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: center;
-      min-width: 150px;
-    `
-
+const DayData = ({data}: Props) => {
     const renderWindSection = () => {
         return (
             <Cover>
@@ -42,7 +21,7 @@ const DayData: React.FC<Props> = ({data}) => {
                     </div>
                     <div>{data.wind_speed} m/s</div>
                     <div>
-                        <RotatedIconWindWrapper>
+                        <RotatedIconWindWrapper rotates={data.wind_deg}>
                             <Icon iconType={'arrow'} />
                         </RotatedIconWindWrapper>
                     </div>
@@ -50,8 +29,6 @@ const DayData: React.FC<Props> = ({data}) => {
             </Cover>
         )
     }
-
-
 
     const renderSunPhases = () => {
         return (
@@ -96,5 +73,26 @@ const DayData: React.FC<Props> = ({data}) => {
         </Container>
     );
 };
+
+
+const Container = styled.section`
+      display: grid;
+      grid-gap: 20px;
+    `
+
+const RotatedIconWindWrapper = styled.div<{rotates: string | number}>`
+      height: fit-content;
+      width: fit-content;
+      transform: rotate(${(props) => `${props.rotates}deg`});
+    `;
+
+const WindWrapper = styled.div`
+      padding: .6em;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      min-width: 150px;
+    `
 
 export default DayData;
