@@ -1,26 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+import Routes from "./components/Routes";
+import Sidebar from "./components/Sidebar/Sidebar";
+import { RecoilRoot } from 'recoil'
+import { QueryClientProvider, QueryClient } from 'react-query';
+
+
+const queryClient = new QueryClient()
+
+const Body = () => (
+        <BrowserRouter>
+            <Sidebar />
+            <div className="containerMain" >
+                <Routes />
+            </div>
+        </BrowserRouter>
+)
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className="containerApp">
+            <RecoilRoot>
+                <QueryClientProvider client={queryClient} contextSharing >
+                        <Body />
+                </QueryClientProvider>
+            </RecoilRoot>
+        </div>
+    );
 }
 
 export default App;
