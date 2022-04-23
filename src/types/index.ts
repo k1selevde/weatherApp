@@ -4,7 +4,7 @@ export type RestIconsIdType = '01d' | '02d' | '03d' | '04d' | '09d' | '10d' | '1
 type GeoCityRestType = {
     country: string
     lat: number
-    local_names: {[key: string]: string}
+    local_names: { [key: string]: string }
     lon: number
     name: string
     state: string
@@ -50,19 +50,58 @@ type DayCityForecastType = {
     uvi: number
 }
 
-type ForecastCityRestType = {
+type CurrentCityForecastType = {
+    dt: number
+    feels_like: number
+    temp: 289.3
+    weather: Array<{
+        id: number,
+        main: string,
+        description: string,
+        icon: RestIconsIdType
+    }>
+    [key: string]: any
+}
+
+type OneCallRestType = {
     lat: number
     lon: number
     timezone: string
     timezone_offset: number
-    current?: {[key: string]: any}
-    minutely?: Array<{dt: number, precipitation: number}>
+    current: CurrentCityForecastType
+    minutely?: Array<{ dt: number, precipitation: number }>
     daily?: Array<DayCityForecastType>
-    alerts?: Array<any>
+    alerts?: Array<AlertRestType>
 }
 
+type AlertRestType = {
+    description: string,
+    end: number,
+    event: string,
+    sender_name: string,
+    start: number
+    tags: string[]
+}
+
+type OptionAutocompleteInputType = {
+    title: string,
+    id: string
+    lat: number | string,
+    lon: number | string
+}
+
+type FavoriteCardType = {
+    title: string,
+    id: string,
+    date: number | string
+} & OptionAutocompleteInputType
+
 export type {
-    ForecastCityRestType,
+    AlertRestType,
+    CurrentCityForecastType,
+    FavoriteCardType,
     GeoCityRestType,
-    DayCityForecastType
+    DayCityForecastType,
+    OneCallRestType,
+    OptionAutocompleteInputType
 }

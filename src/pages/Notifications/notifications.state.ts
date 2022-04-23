@@ -1,8 +1,11 @@
 import {atom} from "recoil";
+import { AlertRestType } from "../../types";
 
-const notificationsState = atom({
+export type NotificationType = AlertRestType
+
+const notificationsState = atom<NotificationType[]>({
     key: 'notificationsState',
-    default: {}
+    default: []
 });
 
 export {

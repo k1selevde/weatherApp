@@ -1,46 +1,50 @@
 import React from 'react';
 import TranslationPicker from "../TranslationPicker/TranslationPicker";
-import IconLink from "../../shared/ui-kit/IconLink/IconLink";
+import IconLink from "../../shared/ui-kit/IconLink";
 import styled from "styled-components";
+import { useIntl } from 'react-intl';
 
 type SidebarMenuLinkType = {
-    title: string,
+    id: string,
     iconType: string,
     link: string
 }
 
 const sidebarMenuLinks: Array<SidebarMenuLinkType> = [
     {
-        title: 'Main',
+        id: 'main',
         iconType: "cloud",
         link: '/'
     },
     {
-        title: 'Map',
+        id: 'map',
         iconType: 'map',
         link: '/map'
     },
     {
-        title: 'Favorites',
+        id: 'favorites',
         iconType: 'heart',
         link: '/favorites'
     },
     {
-        title: 'Notifications',
+        id: 'notifications',
         iconType: 'bell',
         link: '/notifications'
     },
     {
-        title: 'Theme',
+        id: 'theme',
         iconType: 'moon',
         link: '/theme'
     }
 ]
 
 const Sidebar = () => {
-    const renderMenuLink = ({title, link, iconType}: SidebarMenuLinkType): React.ReactNode => (
-        <li title={title} key={link}>
-            <IconLink iconType={iconType} to={link} title={title}/>
+    const intl = useIntl();
+
+
+    const renderMenuLink = ({id, link, iconType}: SidebarMenuLinkType): React.ReactNode => (
+        <li key={id}>
+            <IconLink iconType={iconType} to={link} title={intl.formatMessage({id: `sidebar.${id}`})} />
         </li>
     )
 

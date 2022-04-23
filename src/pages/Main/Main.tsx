@@ -1,102 +1,102 @@
-import React, {useEffect} from 'react';
-import useDocumentTitle from "../../shared/hooks/useDocumentTitle";
-import MainSearchField, {OptionAutocompleteInputType} from "./components/MainSearchField/MainSearchField";
-import WeekCarousel from "./components/WeekCarousel/WeekCarousel";
-import {useRecoilValue, useSetRecoilState} from "recoil";
-import {mainDailyForecastState, mainDayForecastState, mainSearchValueState} from './main.state'
+import React from 'react';
+import {useIntl} from "react-intl";
 import {useQuery} from "react-query";
-import DayData from "./components/DayData/DayData";
+import {useNavigate} from "react-router-dom";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import styled from "styled-components";
-import noDataLightPath from '../../shared/assets/static/noDataLight.svg'
-
-const fetchForecastCityData = async ({lat, lon}: OptionAutocompleteInputType) => {
-    const apiKey = process.env.REACT_APP_API_KEY
-
-    const cnt = 7
-
-
-    const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&appid=${apiKey}&cnt=${cnt}`
-    );
-
-    if (!response.ok) {
-        throw new Error(`Network response was not ok`, )
-    }
-
-    return response.json();
-}
-
+import {fetchForecastCityData} from '../../api';
+import spinner from '../../shared/assets/animated/spinner.svg'
+import {handleErrorRedirect} from "../../shared/helpers/common";
+import useDocumentTitle from "../../shared/hooks/useDocumentTitle";
+import Icon from "../../shared/ui-kit/Icon";
+import {DayCityForecastType, OneCallRestType} from '../../types';
+import DayData from "./components/DayData";
+import MainFavoriteButton from "./components/MainFavoriteButton";
+import MainSearchField from "./components/MainSearchField";
+import WeekList from "./components/WeekList";
+import {mainDailyForecastState, mainDayForecastState, mainSearchValueState} from './main.state'
 
 const Main = () => {
-    useDocumentTitle('Main')
+    const intl = useIntl()
+    const navigate = useNavigate()
 
-    const searchMainData = useRecoilValue(mainSearchValueState);
+    useDocumentTitle(intl.formatMessage({id: 'tab.main'}))
+
+    const searchValue = useRecoilValue(mainSearchValueState);
     const setForecastData = useSetRecoilState(mainDailyForecastState)
-    const day = useRecoilValue(mainDayForecastState)
+    const [day, setDayForecastData] = useRecoilState(mainDayForecastState)
 
-    const { data, isSuccess } = useQuery(
-        ["posts", searchMainData],
-        () => fetchForecastCityData(searchMainData),
+    const handleRequestCityDataSuccess = (data: OneCallRestType) => {
+        setForecastData(data)
+        setDayForecastData({} as DayCityForecastType)
+    }
+
+    const { isLoading } = useQuery<OneCallRestType>(
+        ["posts", searchValue],
+        () => fetchForecastCityData(searchValue),
         {
+            refetchOnMount: false,
             refetchOnWindowFocus: false,
-            enabled: !!searchMainData.id
+            enabled: !!searchValue.id,
+            onSuccess: handleRequestCityDataSuccess,
+            onError: handleErrorRedirect(navigate)
         }
     )
 
-    useEffect(() => {
-        if (isSuccess) {
-            setForecastData(data)
-        }
-    }, [data])
-
-    const renderWeekColumn = () => {
-        return (
-            <WeekContainer>
-                <WeekCarousel />
-            </WeekContainer>
-        )
-    }
+    const weekColumn = (
+        <WeekContainer>
+            <WeekList />
+        </WeekContainer>
+    )
 
     const emptyBlock = (
         <EmptyWrapper>
-            <p>Введите более двух символов в поисковую строку...</p>
-            <img src={noDataLightPath} alt="noData" width="200" height="200"/>
+            <p>{intl.formatMessage({id: "main.emptySearchMessage"}, {count: '2'})}</p>
+            <Icon iconType={'noData'} />
         </EmptyWrapper>
     )
 
     const content = (
-        <Container>
-            {renderWeekColumn()}
+        <ContentContainer>
+            {isLoading ? <img src={spinner} alt="loading"/> : weekColumn}
             <DayData data={day}/>
-        </Container>
+        </ContentContainer>
     )
 
     return (
         <>
-            <MainSearchField/>
-            {!searchMainData.id ? emptyBlock : content}
+            <TopContainer>
+                <MainSearchField />
+                <MainFavoriteButton currentValue={searchValue} />
+            </TopContainer>
+            {!searchValue.id ? emptyBlock : content}
         </>
     );
 };
 
 
-const Container = styled.div`
-      margin-top: 40px;
-      display: flex;
-      gap: 40px;
-    `
+const TopContainer = styled.div`
+    display: flex;
+    gap: 25px;
+`
+
+const ContentContainer = styled.div`
+    margin-top: 40px;
+    display: flex;
+    gap: 40px;
+`
 
 const WeekContainer = styled.div`
-      display: flex;
-      flex-direction: column;
-      gap: 50px;
-    `
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+`
 
 const EmptyWrapper = styled.div`
-      margin-top: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px
-    `
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px
+`
 
 export default Main;

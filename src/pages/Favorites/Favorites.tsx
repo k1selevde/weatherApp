@@ -1,50 +1,46 @@
 import React from 'react';
-import useDocumentTitle from "../../shared/hooks/useDocumentTitle";
-import FavoriteCard from "./components/FavoriteCard/FavoriteCard";
+import {useIntl} from "react-intl";
+import {useRecoilState, useRecoilValue} from "recoil";
 import styled from "styled-components";
-
-export type FavoriteCardType = {
-    title: string,
-    id: number,
-    date: number | string
-}
-
-const testData: Array<FavoriteCardType> = [
-    {
-        title: 'Moscow',
-        id: 2431,
-        date: 1648403951967
-    },
-    {
-        title: 'New-York',
-        id: 4321,
-        date: 1648403951967
-    },
-    {
-        title: 'Saratov',
-        id: 5522,
-        date: 1648403951967
-    },
-    {
-        title: 'Tagil',
-        id: 7666,
-        date: 1648403951967
-    },
-]
+import {localeState} from "../../i18n";
+import {ArrayAndNotEmpty} from "../../shared/helpers/common";
+import useDocumentTitle from "../../shared/hooks/useDocumentTitle";
+import Icon from '../../shared/ui-kit/Icon';
+import FavoriteCard from "./components/FavoriteCard";
+import {favoritesState} from "./favorites.state";
 
 const Favorites = () => {
+    const intl = useIntl()
 
-    useDocumentTitle('Favorite')
+    useDocumentTitle(intl.formatMessage({id: "tab.favorites"}))
+
+    const locale = useRecoilValue(localeState)
+    const [favorites, setFavorites] = useRecoilState(favoritesState)
+
+    const handleDeleteCard = (id: string) => setFavorites(prev => prev.filter(item => item.id !== id))
+
+    const list = (
+        <List>
+            {favorites
+                .map((card, index) => <FavoriteCard key={index} data={card} onDelete={handleDeleteCard} locale={locale} />)
+            }
+        </List>
+    )
+
+    const empty = (
+        <EmptyWrapper>
+            <p>{intl.formatMessage({id: "favorites.empty"})}</p>
+            <Icon iconType={'noData'} />
+        </EmptyWrapper>
+    )
 
     return (
-        <div>
-            <Caption>Favorites list</Caption>
+        <>
+            <Caption>{intl.formatMessage({id: "favorites.title"})}</Caption>
             <div>
-                <List>
-                    {testData.map((card, index) => <FavoriteCard key={card.id | index} data={card} />)}
-                </List>
+                {ArrayAndNotEmpty(favorites) ? list : empty}
             </div>
-        </div>
+        </>
     );
 };
 
@@ -60,5 +56,12 @@ const List = styled.ul`
         flex-direction: column;
         gap: 15px;
     `
+
+const EmptyWrapper = styled.div`
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px
+`
 
 export default Favorites;

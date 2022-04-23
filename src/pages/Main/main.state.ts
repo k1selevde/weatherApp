@@ -1,10 +1,10 @@
-import { atom } from "recoil";
-import {DayCityForecastType, ForecastCityRestType} from "../../types";
-import {OptionAutocompleteInputType} from "./components/MainSearchField/MainSearchField";
+import {atom} from "recoil";
+import {DayCityForecastType, OneCallRestType} from "../../types";
+import {OptionAutocompleteInputType} from "../../types";
 
 const mainDailyForecastState = atom({
     key: 'mainDailyForecastState',
-    default: {} as ForecastCityRestType
+    default: {} as OneCallRestType
 });
 
 const mainDayForecastState = atom({
