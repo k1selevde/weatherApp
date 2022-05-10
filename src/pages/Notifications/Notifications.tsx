@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import {useIntl} from "react-intl";
 import {useQuery} from "react-query";
 import {useNavigate} from "react-router-dom";
@@ -40,12 +40,18 @@ const Notifications = () => {
         setCity(option || {} as FavoriteCardType)
     }
 
-    const { isLoading } = useQuery<OneCallRestType>(
+    useEffect(() => {
+        return () => {
+            setNotifications([])
+        }
+    }, [])
+
+    const { isFetching } = useQuery<OneCallRestType>(
         ["alerts", city],
         () => fetchNotifications(city),
         {
             enabled: !IsEmptyObject(city),
-            refetchOnMount: false,
+            refetchOnMount: true,
             refetchOnWindowFocus: false,
             onError: handleErrorRedirect(navigate),
             onSuccess: handleRequestSuccess
@@ -81,7 +87,7 @@ const Notifications = () => {
 
     const renderNotificationsContent = () => {
         switch (true) {
-            case isLoading:
+            case isFetching:
                 return <img src={spinner} alt="loading..." width={90} height={90} />
             case ArrayAndNotEmpty(notifications):
                 return notificationsList

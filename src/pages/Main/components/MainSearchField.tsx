@@ -16,7 +16,7 @@ const MainSearchField = () => {
 
     const debouncedQuery = useDebounce<string>(searchQuery, 500);
 
-    const { data: citiesSuggestions, error, isLoading, isSuccess, isRefetching, isError } = useQuery(
+    const { data: citiesSuggestions, error, isFetching, isSuccess, isRefetching, isError } = useQuery(
         ["posts", debouncedQuery],
         () => fetchCityGeolocations(debouncedQuery),
         {
@@ -28,10 +28,10 @@ const MainSearchField = () => {
     )
 
     useEffect( () => {
-        if (isSuccess || isLoading || isError) {
+        if (isSuccess || isFetching || isError) {
             setOptions(mapCityOptions(citiesSuggestions) || [])
         }
-    }, [citiesSuggestions, isSuccess, isLoading, isError])
+    }, [citiesSuggestions, isSuccess, isFetching, isError])
 
     const handleChange = (value: string) => {
         setSearchQuery(value)
@@ -51,7 +51,7 @@ const MainSearchField = () => {
         onChange: handleChange,
         onOptionClick: handleOptionClick,
         options,
-        isLoading: isLoading || isRefetching,
+        isLoading: isFetching || isRefetching,
         isError,
         errorMessage: (error instanceof Error) ? error.message : "",
         defaultValue: searchStateValue.title

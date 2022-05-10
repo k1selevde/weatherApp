@@ -91,13 +91,14 @@ const Info = styled.div`
 const InfoBottom = styled.div`
       display: flex;
       align-items: center;
-      gap: 10px
+      gap: 10px;
+      margin: 10px 0;
+      font-size: 14px;
 `
 
-const Temp = styled.p`
+const Temp = styled.div`
       white-space: nowrap;
       font-weight: 600;
-      font-size: 14px;
 `
 
 const Title = styled.h4`

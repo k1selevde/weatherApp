@@ -14,6 +14,7 @@ import {mainDailyForecastState, mainDayForecastState, mainSearchValueState} from
 import InteractiveMap from "./components/InteractiveMap";
 
 const Map = () => {
+    //костыль для решения старой проблемы добавления лишних символов в src uri при попытки загрузки статики
     L.Icon.Default.imagePath = 'leaflet/';
 
     const intl = useIntl()

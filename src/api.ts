@@ -1,8 +1,8 @@
 import {FavoriteCardType, OneCallRestType, OptionAutocompleteInputType} from "./types";
 
-const fetchCityGeolocations = async (query: string) => {
-    const apiKey = process.env.REACT_APP_API_KEY
+const apiKey = process.env.REACT_APP_API_KEY
 
+const fetchCityGeolocations = async (query: string) => {
     const response = await fetch(
         `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`
     );
@@ -15,8 +15,6 @@ const fetchCityGeolocations = async (query: string) => {
 }
 
 const fetchForecastCityData = async ({lat, lon}: OptionAutocompleteInputType) => {
-    const apiKey = process.env.REACT_APP_API_KEY
-
     const cnt = 7
 
     const response = await fetch(
@@ -31,8 +29,6 @@ const fetchForecastCityData = async ({lat, lon}: OptionAutocompleteInputType) =>
 }
 
 const fetchNotifications = async (city: FavoriteCardType): Promise<OneCallRestType> => {
-    const apiKey = process.env.REACT_APP_API_KEY
-
     const response = await fetch(
         `https://api.openweathermap.org/data/2.5/onecall?lat=${city.lat}&lon=${city.lon}&exclude=minutely,hourly,daily,current&appid=${apiKey}`
     );
