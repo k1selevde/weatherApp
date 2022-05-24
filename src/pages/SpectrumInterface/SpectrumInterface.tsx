@@ -1,10 +1,16 @@
 import React from 'react';
-import ColourTemplate from "./components/ColourTemplate/ColourTemplate";
-import styled from "styled-components";
-import {themeState, ThemeStateType} from '../../theme';
+import {useIntl} from "react-intl";
 import {useRecoilState} from "recoil";
+import styled from "styled-components";
+import useDocumentTitle from "../../shared/hooks/useDocumentTitle";
+import {themeState, ThemeStateType} from '../../theme';
+import ColourTemplate from "./components/ColourTemplate";
 
 const SpectrumInterface = () => {
+    const intl = useIntl()
+
+    useDocumentTitle(intl.formatMessage({id: "tab.theme"}))
+
     const [theme, setTheme] = useRecoilState(themeState)
 
     const isEqualToTheme = (templateTheme: ThemeStateType): boolean => templateTheme === theme;

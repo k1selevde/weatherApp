@@ -7,33 +7,32 @@ import {
 /*pages*/
 import Main from "../pages/Main/Main";
 import Favorites from "../pages/Favorites/Favorites";
-import Notifications from "../pages/Notifications/Notifications";
 import Map from "../pages/Map/Map";
-import SpectrumInterface from "../pages/SpectrumInterface/SpectrumInterface";
 
+
+const SpectrumInterface = React.lazy(() => import("../pages/SpectrumInterface/SpectrumInterface"));
+const Notifications = React.lazy(() => import("../pages/Notifications/Notifications"));
 const NotFound = React.lazy(() => import("../pages/NotFound/NotFound"));
 const ServerError = React.lazy(() => import("../pages/ServerError/ServerError"));
+
+const WithSuspense = (WrappedComponent: React.JSXElementConstructor<object>) => {
+    return <React.Suspense fallback={<>...</>}>
+        <WrappedComponent />
+    </React.Suspense>
+
+}
 
 const Routes = () => {
     return (
             <Switch>
                 <Route path="/" element={<Main />}/>
+                <Route path="/favorites" element={<Favorites />} />
                 <Route path="/map" element={<Map />}/>
-                <Route path="/notifications" element={<Notifications />}/>
-                <Route path="/favorites" element={<Favorites />}/>
-                <Route path="/theme" element={<SpectrumInterface />}/>
-                <Route path="/500" element={
-                    <React.Suspense fallback={<>...</>}>
-                        <ServerError />
-                    </React.Suspense>
-                    }
-                />
-                <Route path="*" element={
-                    <React.Suspense fallback={<>...</>}>
-                        <NotFound />
-                    </React.Suspense>
-                    }
-                />
+
+                <Route path="/notifications" element={WithSuspense(Notifications)}/>
+                <Route path="/theme" element={WithSuspense(SpectrumInterface)} />
+                <Route path="/500" element={WithSuspense(ServerError)} />
+                <Route path="*" element={WithSuspense(NotFound)} />
             </Switch>
     );
 };

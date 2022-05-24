@@ -1,9 +1,11 @@
 import React from 'react';
+import {useIntl} from "react-intl";
 import useDocumentTitle from "../../shared/hooks/useDocumentTitle";
 
 const NotFound = () => {
+    const intl = useIntl()
 
-    useDocumentTitle('404')
+    useDocumentTitle(intl.formatMessage({id: "tab.404"}))
 
     return (
         <div>

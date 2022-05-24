@@ -1,37 +1,48 @@
-import {atom} from "recoil";
-
+import {atom, AtomEffect} from "recoil";
 
 export type ThemeStateType = 'light' | 'dark'
+
+const localStorageEffect = (key: string): AtomEffect<ThemeStateType> => ({setSelf, onSet}) => {
+    const savedValue = localStorage.getItem(key)
+
+    if (savedValue != null) {
+        setSelectedCssVariables(savedValue as ThemeStateType)
+
+        setSelf(savedValue as ThemeStateType);
+    }
+
+    onSet((newValue, _, isReset) => {
+        setSelectedCssVariables(newValue)
+
+        isReset
+            ? localStorage.removeItem(key)
+            : localStorage.setItem(key, newValue);
+    });
+};
+
 
 const themeState = atom<ThemeStateType>({
     key: 'themeState',
     // должно соответствовать значениям "--selected" переменных по умолчанию в файле "main.sass"
     default: 'light',
-    effects: [
-    ({onSet}) => {
-        onSet((newValue) => {
-            setSelectedCssVariables(newValue)
-        });
-    },
-],
+    effects: [localStorageEffect('theme')],
 });
 
-
-const setSelectedCssVariables = (themeName: 'light' | 'dark') => {
+const setSelectedCssVariables = (themeName: ThemeStateType) => {
     const selectedCssProps = Array.from(document.styleSheets)
         .reduce(
-            (acc: any[], sheet: CSSStyleSheet) =>
+            (acc: string[], sheet: CSSStyleSheet) =>
                 (acc = [
                     ...acc,
                     ...Array.from(sheet.cssRules)
                         .reduce(
-                            // FIXME-k1selevde тип CSSRule не содержит style почему-то :(
-                            (def: any[], rule: any) => (
+                            //FIXME-k1selevde вывести тип для rule
+                            (def: string[], rule: any) => (
                                 (def = rule.selectorText === ":root"
                                     ? [
                                         ...def,
-                                        ...Array.from(rule.style).filter((name: any) =>
-                                            name.startsWith("--selected")
+                                        ...Array.from<string>(rule.style)
+                                            .filter((name: string) => name.startsWith("--selected")
                                         )
                                     ]
                                     : def

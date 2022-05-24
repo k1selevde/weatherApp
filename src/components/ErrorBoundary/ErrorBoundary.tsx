@@ -1,4 +1,6 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
+import styled from 'styled-components';
+import serverError from '../../shared/assets/static/serverError.svg'
 
 interface Props {
     children: ReactNode;
@@ -9,26 +11,38 @@ interface State {
 }
 
 class ErrorBoundary extends Component<Props, State> {
-    public state: State = {
+    state: State = {
         hasError: false,
     };
 
-    public static getDerivedStateFromError(_: Error): State {
-        // Update state so the next render will show the fallback UI.
+    static getDerivedStateFromError(_: Error): State {
         return { hasError: true };
     }
 
-    public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         console.error('Uncaught error:', error, errorInfo);
     }
 
-    public render() {
+    render() {
         if (this.state.hasError) {
-            return <h1>Sorry.. there was an error (ErrorBoundary)</h1>;
+            return <Wrapper>
+                <h1>Sorry.. there was a server error [Error Boundary]</h1>
+                <img src={serverError} alt="server error"/>
+            </Wrapper>
         }
 
         return this.props.children;
     }
 }
+
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 55px;
+  align-items: center;
+  height: 100vh
+`
 
 export default ErrorBoundary
